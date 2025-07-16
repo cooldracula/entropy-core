@@ -37,9 +37,11 @@ jobs:
       - name: Trigger Cloud Build
         working-directory: yocto-build
         run: |
+          GITHUB_REF="${{ github.ref_name }}"
+          TAG="${GITHUB_REF#release/}"
           gcloud builds submit \
             --config=cloudbuild.yaml \
-            --substitutions=_TAG_NAME=${{ github.ref_name }#release/} \
+            --substitutions=_TAG_NAME="$TAG"  \
             --project=${{ secrets.GCP_PROJECT_ID }} \
             .
 
