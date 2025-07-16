@@ -29,17 +29,16 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@77e7a554d41e2ee56fc945c52dfd3f33d12def9a #v2.1.4
 
-
       - name: List yocto-build contents
         run: ls -la
 
-      # - name: Trigger Cloud Build
-      #   working-directory: yocto-build
-      #   run: |
-      #     GITHUB_REF="${{ github.ref_name }}"
-      #     TAG="${GITHUB_REF#release/}"
-      #     gcloud builds submit \
-      #       --config=cloudbuild.yaml \
-      #       --substitutions=_TAG_NAME="$TAG"  \
-      #       --project=${{ secrets.GCP_PROJECT_ID }} \
-      #       .
+      - name: Trigger Cloud Build
+        working-directory: yocto-build
+        run: |
+          GITHUB_REF="${{ github.ref_name }}"
+          TAG="${GITHUB_REF#release/}"
+          gcloud builds submit \
+            --config=cloudbuild.yaml \
+            --substitutions=_TAG_NAME="$TAG"  \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
+            .
