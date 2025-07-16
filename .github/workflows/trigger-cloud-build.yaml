@@ -15,6 +15,12 @@ jobs:
   trigger-build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout yocto-build repo
+        uses: actions/checkout@v4
+        with:
+          repository: cooldracula/yocto-build
+          ref: main
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@ba79af03959ebeac9769e648f473a284504d9193 #v2.1.10
         with:
@@ -23,24 +29,17 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@77e7a554d41e2ee56fc945c52dfd3f33d12def9a #v2.1.4
 
-      - name: Checkout yocto-build repo
-        uses: actions/checkout@v4
-        with:
-          repository: cooldracula/yocto-build
-          ref: main
-          path: yocto-build
 
       - name: List yocto-build contents
-        working-directory: yocto-build
         run: ls -la
 
-      - name: Trigger Cloud Build
-        working-directory: yocto-build
-        run: |
-          GITHUB_REF="${{ github.ref_name }}"
-          TAG="${GITHUB_REF#release/}"
-          gcloud builds submit \
-            --config=cloudbuild.yaml \
-            --substitutions=_TAG_NAME="$TAG"  \
-            --project=${{ secrets.GCP_PROJECT_ID }} \
-            .
+      # - name: Trigger Cloud Build
+      #   working-directory: yocto-build
+      #   run: |
+      #     GITHUB_REF="${{ github.ref_name }}"
+      #     TAG="${GITHUB_REF#release/}"
+      #     gcloud builds submit \
+      #       --config=cloudbuild.yaml \
+      #       --substitutions=_TAG_NAME="$TAG"  \
+      #       --project=${{ secrets.GCP_PROJECT_ID }} \
+      #       .
