@@ -38,6 +38,7 @@ jobs:
           TAG="${GITHUB_REF#release/}"
           gcloud builds submit \
             --config=cloudbuild.yaml \
+            --service-account=yocto-build-cicd@${{ secrets.GCP_PROJECT_ID }}.iam.gserviceaccount.com
             --substitutions=_TAG_NAME="$TAG"  \
             --project=${{ secrets.GCP_PROJECT_ID }} \
             .
