@@ -31,15 +31,17 @@ jobs:
           path: yocto-build
 
       - name: List yocto-build contents
-        run: ls -la yocto-build
+        working-directory: yocto-build
+        run: ls -la
 
-      # - name: Trigger Cloud Build
-      #   run: |
-      #     cd yocto-build
-      #     gcloud builds submit \
-      #       --config=cloudbuild.yaml \
-      #       --substitutions=_TAG_NAME=${{ github.ref_name }} \
-      #       --project=${{ secrets.GCP_PROJECT_ID }}
+      - name: Trigger Cloud Build
+        working-directory: yocto-build
+        run: |
+          gcloud builds submit \
+            --config=cloudbuild.yaml \
+            --substitutions=_TAG_NAME=${{ github.ref_name }#release/} \
+            --project=${{ secrets.GCP_PROJECT_ID }} \
+            .
 
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
