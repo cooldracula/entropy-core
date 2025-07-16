@@ -23,12 +23,20 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@77e7a554d41e2ee56fc945c52dfd3f33d12def9a #v2.1.4
 
+      - name: Checkout yocto-build repo
+        uses: actions/checkout@v4
+        with:
+          repository: cooldracula/yocto-build
+          ref: main
+          path: yocto-build
+
       - name: Trigger Cloud Build
         run: |
-          gcloud builds submit "https://github.com/cooldracula/yocto-build" \
-            --git-source-revision=main \
+          cd yocto-build
+          gcloud builds submit \
             --config=cloudbuild.yaml \
             --substitutions=_TAG_NAME=${{ github.ref_name }} \
             --project=${{ secrets.GCP_PROJECT_ID }}
+
         env:
           GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
