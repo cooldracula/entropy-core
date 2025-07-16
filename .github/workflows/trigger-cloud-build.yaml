@@ -44,6 +44,3 @@ jobs:
             --substitutions=_TAG_NAME="$TAG"  \
             --project=${{ secrets.GCP_PROJECT_ID }} \
             .
-
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
